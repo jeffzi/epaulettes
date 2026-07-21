@@ -4,6 +4,7 @@ import type { Help } from "commander";
 import { colorize } from "./style.js";
 import type { Style } from "./style.js";
 
+/** Styling options for Commander.js help output rendered by {@link createHelpConfig}. */
 export interface EpaulettesOptions {
   accentStyle: Style;
   headingStyle: Style;
@@ -27,6 +28,12 @@ const defaults: EpaulettesOptions = {
   borderStyle: "round",
 };
 
+/**
+ * Creates a Commander.js {@link Help} configuration that wraps each help
+ * section in a boxen border with styled headings and accent-colored terms.
+ *
+ * Returns a partial `Help` object suitable for `Command.configureHelp()`.
+ */
 export function createHelpConfig(options?: Partial<EpaulettesOptions>): Partial<Help> {
   const { accentStyle, headingStyle, borderColor, borderStyle } = { ...defaults, ...options };
 
