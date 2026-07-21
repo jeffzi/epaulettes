@@ -1,10 +1,15 @@
 {
-  "name": "epaulettes",
-  "version": "0.0.0",
-  "private": true,
-  "description": "",
+  "name": "@jeffzi/epaulettes",
+  "version": "0.1.0",
+  "description": "Commander.js help styling with boxen borders and ANSI colors",
   "license": "MIT",
   "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "check:actions": "actionlint && zizmor .github/workflows",
@@ -26,11 +31,15 @@
     "prepare": "test -d .git && lefthook install || true",
     "test": "vitest run --coverage"
   },
+  "dependencies": {
+    "boxen": "^8.0.1"
+  },
   "devDependencies": {
     "@commitlint/cli": "^21.2.0",
     "@commitlint/config-conventional": "^21.2.0",
     "@types/node": "^26.1.0",
     "@vitest/coverage-v8": "^4.1.0",
+    "commander": "^15.0.0",
     "cspell": "^10.0.0",
     "esbuild": "^0.28.0",
     "fallow": "^3.7.0",
@@ -44,7 +53,15 @@
     "typescript": "^7.0.0",
     "vitest": "^4.1.0"
   },
+  "peerDependencies": {
+    "commander": ">=15.0.0"
+  },
   "engines": {
     "node": ">=22"
+  },
+  "allowScripts": {
+    "esbuild@0.28.1": true,
+    "fsevents@2.3.3": true,
+    "lefthook@2.1.10": true
   }
 }
