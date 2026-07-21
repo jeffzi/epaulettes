@@ -1,8 +1,11 @@
 {
   "name": "@jeffzi/epaulettes",
   "version": "0.1.0",
-  "description": "Commander.js help styling with boxen borders and ANSI colors",
+  "description": "Styled help formatting for Commander.js with customizable borders and colors",
   "license": "MIT",
+  "files": [
+    "dist"
+  ],
   "type": "module",
   "exports": {
     ".": {
