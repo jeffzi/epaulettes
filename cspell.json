@@ -3,7 +3,7 @@
   "version": "0.2",
   "language": "en",
   "files": ["**/*.{ts,tsx,mts,cts,md}"],
-  "words": ["epaulettes"],
+  "words": ["epaulettes", "jeffzi"],
   "ignorePaths": [
     ".planning",
     ".research",
