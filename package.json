@@ -12,7 +12,7 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
-    "demo": "vhs scripts/demo.tape",
+    "demo": "vhs scripts/demo-before.tape && vhs scripts/demo-after.tape",
     "check:actions": "actionlint && zizmor .github/workflows",
     "check:fmt": "oxfmt --check",
     "check:lint": "oxlint",

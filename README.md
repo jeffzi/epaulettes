@@ -7,7 +7,16 @@ Styled help for [Commander.js](https://github.com/tj/commander.js) CLIs.
 Commander.js prints help as flat text. Epaulettes wraps each section (Arguments, Options, Commands)
 in box-drawing borders and applies configurable ANSI styles to headings and option names.
 
-![Demo showing Commander.js help output before and after applying epaulettes](assets/demo.png)
+<table>
+<tr>
+<th>Before</th>
+<th>After</th>
+</tr>
+<tr>
+<td><img src="assets/demo-before.png" alt="Commander.js default help output" /></td>
+<td><img src="assets/demo-after.png" alt="Commander.js help output styled with epaulettes" /></td>
+</tr>
+</table>
 
 Color decisions defer to Commander's own `getOutHasColors`. When `--no-color` is active, Commander
 strips ANSI codes while borders remain.
