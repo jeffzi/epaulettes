@@ -1,24 +1,22 @@
 import boxen from "boxen";
+import type { Options as BoxenOptions } from "boxen";
 import type { Help } from "commander";
 
 import { colorize } from "./style.js";
 import type { Style } from "./style.js";
 
+/** Border color accepted by boxen — named ANSI colors with autocomplete, or any string. */
+export type BorderColor = NonNullable<BoxenOptions["borderColor"]>;
+
+/** Border style accepted by boxen. */
+export type BorderStyle = NonNullable<BoxenOptions["borderStyle"]>;
+
 /** Styling options for Commander.js help output rendered by {@link createHelpConfig}. */
 export interface EpaulettesOptions {
   accentStyle: Style;
   headingStyle: Style;
-  borderColor: string;
-  borderStyle:
-    | "round"
-    | "single"
-    | "double"
-    | "bold"
-    | "singleDouble"
-    | "doubleSingle"
-    | "classic"
-    | "arrow"
-    | "none";
+  borderColor: BorderColor;
+  borderStyle: BorderStyle;
 }
 
 const defaults: EpaulettesOptions = {
