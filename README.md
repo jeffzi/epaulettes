@@ -5,7 +5,8 @@ Styled help for [Commander.js](https://github.com/tj/commander.js) CLIs.
 ## What it does
 
 Commander.js prints help as flat text. Epaulettes wraps each section (Arguments, Options, Commands)
-in box-drawing borders and applies configurable ANSI styles to headings and option names.
+in box-drawing borders and applies configurable ANSI styles to flags, usage lines, type annotations,
+and description text.
 
 <table>
 <tr>
@@ -18,8 +19,7 @@ in box-drawing borders and applies configurable ANSI styles to headings and opti
 </tr>
 </table>
 
-Color decisions defer to Commander's own `getOutHasColors`. When `--no-color` is active, Commander
-strips ANSI codes while borders remain.
+When `--no-color` is active, Commander strips ANSI codes while borders remain.
 
 ## Installation
 
@@ -52,10 +52,9 @@ Pass an options object to override defaults:
 ```typescript
 import { createHelpConfig } from "@jeffzi/epaulettes";
 
-// green names, underlined headings, blue double-line borders
 const helpConfig = createHelpConfig({
   accentStyle: "green",
-  headingStyle: "underline",
+  titleStyle: "red",
   borderColor: "blue",
   borderStyle: "double",
 });
@@ -65,15 +64,23 @@ program.configureHelp(helpConfig);
 
 ### Options
 
-| Property       | Type          | Default   | Description                                                                                          |
-| -------------- | ------------- | --------- | ---------------------------------------------------------------------------------------------------- |
-| `accentStyle`  | `Style`       | `"cyan"`  | ANSI style for option/argument/command names                                                         |
-| `headingStyle` | `Style`       | `"bold"`  | ANSI style for section headings                                                                      |
-| `borderColor`  | `BorderColor` | `"gray"`  | Border color — named ANSI colors with autocomplete, or any string                                    |
-| `borderStyle`  | `BorderStyle` | `"round"` | Box-drawing style name or `{ topLeft, top, topRight, right, bottomRight, bottom, bottomLeft, left }` |
+| Property              | Type          | Default              | Description                                                                                          |
+| --------------------- | ------------- | -------------------- | ---------------------------------------------------------------------------------------------------- |
+| `accentStyle`         | `StyleSpec`   | `"cyan"`             | ANSI style for the text after each option flag, subcommand name, or argument name                    |
+| `titleStyle`          | `StyleSpec`   | `["yellow", "bold"]` | ANSI style for the "Usage:" prefix                                                                   |
+| `shortFlagStyle`      | `StyleSpec`   | `"green"`            | ANSI style for short flags (`-v`, `-h`)                                                              |
+| `longFlagStyle`       | `StyleSpec`   | `"cyan"`             | ANSI style for long flags (`--verbose`, `--help`)                                                    |
+| `typeAnnotationStyle` | `StyleSpec`   | `"yellow"`           | ANSI style for type annotations (`<path>`, `[value]`) and argument descriptions                      |
+| `usageStyle`          | `StyleSpec`   | `["white", "bold"]`  | ANSI style for the usage line content (after "Usage:")                                               |
+| `borderColor`         | `BorderColor` | `"gray"`             | Border color — named ANSI colors with autocomplete, or any string                                    |
+| `borderStyle`         | `BorderStyle` | `"round"`            | Box-drawing style name or `{ topLeft, top, topRight, right, bottomRight, bottom, bottomLeft, left }` |
 
-**`Style`** (subset of `node:util` `styleText` formats) — `"bold"` | `"red"` | `"green"` |
-`"yellow"` | `"dim"` | `"cyan"` | `"italic"` | `"underline"`
+**`Style`** — re-export of `node:util`'s `InspectColor`: all ANSI modifiers (`"bold"`, `"dim"`,
+`"italic"`, `"underline"`, …), foreground colors (`"red"`, `"green"`, `"cyan"`, …), and background
+colors (`"bgRed"`, `"bgGreen"`, …)
+
+**`StyleSpec`** — a single `Style` or an array of styles for compound formatting (e.g.
+`["white", "bold"]`)
 
 **`BorderColor`** — `"black"` | `"red"` | `"green"` | `"yellow"` | `"blue"` | `"magenta"` |
 `"cyan"` | `"white"` | `"gray"` | `"grey"` | `"blackBright"` | `"redBright"` | `"greenBright"` |

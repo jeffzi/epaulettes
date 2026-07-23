@@ -3,7 +3,7 @@ import type { Options as BoxenOptions } from "boxen";
 import type { Help } from "commander";
 
 import { colorize } from "./style.js";
-import type { Style } from "./style.js";
+import type { StyleSpec } from "./style.js";
 
 /** Border color accepted by boxen — named ANSI colors with autocomplete, or any string. */
 export type BorderColor = NonNullable<BoxenOptions["borderColor"]>;
@@ -13,15 +13,23 @@ export type BorderStyle = NonNullable<BoxenOptions["borderStyle"]>;
 
 /** Styling options for Commander.js help output rendered by {@link createHelpConfig}. */
 export interface EpaulettesOptions {
-  accentStyle: Style;
-  headingStyle: Style;
+  accentStyle: StyleSpec;
+  titleStyle: StyleSpec;
+  shortFlagStyle: StyleSpec;
+  longFlagStyle: StyleSpec;
+  typeAnnotationStyle: StyleSpec;
+  usageStyle: StyleSpec;
   borderColor: BorderColor;
   borderStyle: BorderStyle;
 }
 
 const defaults: EpaulettesOptions = {
   accentStyle: "cyan",
-  headingStyle: "bold",
+  titleStyle: ["yellow", "bold"],
+  shortFlagStyle: "green",
+  longFlagStyle: "cyan",
+  typeAnnotationStyle: "yellow",
+  usageStyle: ["white", "bold"],
   borderColor: "gray",
   borderStyle: "round",
 };
@@ -33,27 +41,68 @@ const defaults: EpaulettesOptions = {
  * Returns a partial `Help` object suitable for `Command.configureHelp()`.
  */
 export function createHelpConfig(options?: Partial<EpaulettesOptions>): Partial<Help> {
-  const { accentStyle, headingStyle, borderColor, borderStyle } = { ...defaults, ...options };
+  const opts = { ...defaults, ...options };
+
+  /**
+   * Parse option term with regex and apply per-part coloring.
+   * Pattern: `/^(-\w)?(?:,\s*)?(--[\w-]+)?(?:\s+(.+))?$/`
+   * Matches: `-v, --verbose <path>` → `-v` (short), `, ` (separator), `--verbose` (long), ` ` (space), `<path>` (type)
+   * Falls back to accentStyle if pattern doesn't match.
+   */
+  function styleOptionTerm(str: string): string {
+    const match = str.match(/^(-\w)?(?:,\s*)?(--[\w-]+)?(?:\s+(.+))?$/);
+
+    if (!match) {
+      return colorize(opts.accentStyle, str);
+    }
+
+    const [, shortFlag, longFlag, typeAnnotation] = match;
+    const parts: string[] = [];
+
+    if (shortFlag) {
+      parts.push(colorize(opts.shortFlagStyle, shortFlag));
+    }
+
+    if (shortFlag && longFlag) {
+      parts.push(", ");
+    }
+
+    if (longFlag) {
+      parts.push(colorize(opts.longFlagStyle, longFlag));
+    }
+
+    if (typeAnnotation) {
+      parts.push(" ", colorize(opts.typeAnnotationStyle, typeAnnotation));
+    }
+
+    return parts.join("");
+  }
+
+  const accentColorize = (str: string) => colorize(opts.accentStyle, str);
 
   return {
     styleTitle(str: string): string {
-      return colorize(headingStyle, str);
+      return colorize(opts.titleStyle, str);
+    },
+
+    styleUsage(str: string): string {
+      return colorize(opts.usageStyle, str);
+    },
+
+    styleOptionTerm(str: string): string {
+      return styleOptionTerm(str);
     },
 
     styleOptionText(str: string): string {
-      return colorize(accentStyle, str);
+      return accentColorize(str);
     },
 
     styleSubcommandText(str: string): string {
-      return colorize(accentStyle, str);
+      return accentColorize(str);
     },
 
     styleArgumentText(str: string): string {
-      return colorize(accentStyle, str);
-    },
-
-    styleCommandText(str: string): string {
-      return colorize(accentStyle, str);
+      return colorize(opts.typeAnnotationStyle, str);
     },
 
     formatItemList(this: Help, heading: string, items: string[], _helper: Help): string[] {
@@ -66,10 +115,10 @@ export function createHelpConfig(options?: Partial<EpaulettesOptions>): Partial<
       const width = (this.helpWidth ?? 80) - 2;
 
       const boxedOutput = boxen(content, {
-        title: colorize(headingStyle, title),
+        title,
         titleAlignment: "left",
-        borderStyle,
-        borderColor,
+        borderStyle: opts.borderStyle,
+        borderColor: opts.borderColor,
         width,
       });
 

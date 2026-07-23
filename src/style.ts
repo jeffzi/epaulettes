@@ -17,10 +17,15 @@ export const colorStream = Object.assign(
   { isTTY: true } as const,
 );
 
-/** ANSI text-style names accepted by `node:util` {@link styleText}. */
-export type Style = "bold" | "red" | "green" | "yellow" | "dim" | "cyan" | "italic" | "underline";
+/** Re-export of `node:util`'s `InspectColor` — every modifier, foreground, and background ANSI style that `styleText` accepts. */
+export type { InspectColor as Style } from "node:util";
 
-/** Applies an ANSI {@link Style} to `text`, always emitting escape codes via {@link colorStream}. */
-export function colorize(style: Style, text: string): string {
+/** One style or an array of styles for compound formatting (e.g. `["white", "bold"]`). */
+export type StyleSpec =
+  | import("node:util").InspectColor
+  | readonly import("node:util").InspectColor[];
+
+/** Applies an ANSI {@link StyleSpec} to `text`, always emitting escape codes via {@link colorStream}. */
+export function colorize(style: StyleSpec, text: string): string {
   return styleText(style, text, { stream: colorStream });
 }

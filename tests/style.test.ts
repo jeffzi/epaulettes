@@ -1,14 +1,21 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, expectTypeOf } from "vitest";
 
 import { colorize, colorStream } from "../src/style.js";
 
 describe("colorize", () => {
-  it("wraps text with ANSI escape codes", () => {
-    const result = colorize("bold", "hello");
+  it.each([
+    { label: "single style", style: "bold" as const },
+    { label: "array of styles", style: ["white", "bold"] as const },
+  ])("wraps text with ANSI escape codes ($label)", ({ style }) => {
+    const result = colorize(style, "hello");
 
     // biome-ignore lint/suspicious/noControlCharactersInRegex: ANSI escape detection
     expect(result).toMatch(/\x1b\[/);
     expect(result).toContain("hello");
+  });
+
+  it("accepts readonly array of styles", () => {
+    expectTypeOf(colorize).toBeCallableWith(["bold", "cyan"] as const, "test");
   });
 });
 
