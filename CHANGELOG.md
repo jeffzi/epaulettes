@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- Per-part color options for flags (`shortFlagStyle`, `longFlagStyle`, `typeAnnotationStyle`) and the usage line (`titleStyle`, `usageStyle`)
+- Export `Style` and `StyleSpec` types
+
+### Changed
+
+- `Style` type now accepts all ANSI styles from `node:util` instead of a fixed subset
+- Support compound styles via arrays (e.g. `["white", "bold"]`)
+
 ## [0.1.0] - 2026-07-21
 
 ### Added
